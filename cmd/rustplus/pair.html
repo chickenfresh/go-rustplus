@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust+ Authentication</title>
+    <!-- Favicon - Base64 encoded small rust logo -->
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAADtUlEQVR4nO2WXUxbZRjHf+e0pYUWKLQUymdhzA8YbGzIkGUuJIKJJs7oi9lMvNCLJSYm3nhF4oVeeDExJt5sJiYzmmiiF8bdTBOjUefGBgPGxwAbY3yUUWiBFiilPT3HCxYKtKcfXHmT/5OenPP8n+f5P+97nhzBJrIsUxTFBrQBh4EW4ACwDygHSoA5YAK4DQwCF4ELhmFMbzW/2CwQRbEGeAV4HWgEVMA3Pz/vHRoa8k5NTXmXlpbKVFUtlySpXJIktyRJVYqiVFVWVtbU1dXV1tfX10iStAD0A58Yh/SLG+JvCIiiWA+8DbwIuAKBQPDcuXOXrl+/3jM7O7t/O8HtdjuampqOtLe3P+VyuULAV8CHhmFc2hAQRbEJ+AB4BnBcuXJl4OzZsz2hUKhpJ8Lrqa2tDXR0dDxdVVU1C3wMfGQYxqIAIIriQeBT4HFZlv2nT5/+fmBg4LmdCq9HEAS5tbX16WPHjj0hy/IU8JphGD8JQBR4RVEU34kTJ74ZHR19ZLfE16ipqRk/efLkc4qizAGvuoEXgCpJkoInTpz4arfFASYmJvZ1dnZ+K0lSFfC8G3gJqA0Gg72XL19+dLfFASYnJxu6urp+liSpFjjsBvYDvt7e3sPFEHe5XL8JgjBfyJyRkZHHZFn2AftdQBUQmJiYqC2GuCRJIUEQfACFzJuamqqXZTkAVLmAMmB+bm6uvBjiAGVlZfOCIKwUMi8cDpdLkjQPlLmAEmBpeXm5pBjiAKqqrgiCIBcyT1XVElmWl4ASF2AHHIqiOIohDuBwOByCINgKmadpmsNut9sBhwuQAZvH43EXQxzA4/HMCoJgK2Sez+ebsdlsMiALwCJQUl9fP1YMcYDa2tqQIAhLhcypqakJybK8BEQEwzDCQKi5uflaIYsLgmDbKrbb7b/bbLZQIXMaGhquGYYRBsKrx/AXoLqjo+NiIYsHg8Hm1tbWnkLmtLW1XQBqgYsCgGEYI8CPfr//l+7u7mO7FXe5XJGurq7n/H7/CPCT8c+nBCAYhqECbwJzR48e/XFgYODJ3RBvbm7uP3bs2A+GYcwBbxiGoa4VGYPAS8BCTU3NcHd399FNTU3bdkJDQ8O1kydPPu/3+0PAy8Dg+jFrTWgYxjXgGeBbwHnmzJnPu7u7n5BlWdqOuCzLUnd399HOzs7PZVl2Al8Dzxr/E18XEEWxEngP6AJcs7Oz/t7e3r7h4eHe+fn5/ZvNd7vdkaampsMtLS1P+ny+EPAl8L5hGJObrf0bWNJZ0QIQw8IAAAAASUVORK5CYII=">
+    <!-- Add Axios for HTTP requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #ce422b;
+            margin-top: 0;
+            border-bottom: 2px solid #ce422b;
+            padding-bottom: 10px;
+        }
+        
+        .step {
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 3px solid #ce422b;
+        }
+        
+        .step h3 {
+            margin-top: 0;
+            color: #ce422b;
+        }
+        
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #ce422b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #a73522;
+        }
+        
+        .success {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .success h2 {
+            color: #28a745;
+        }
+        
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ce422b;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #28a745;
+            border-radius: 5px;
+            width: 100%;
+            animation: countdown 5s linear forwards;
+        }
+        
+        @keyframes countdown {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        
+        .info {
+            background-color: #e7f5ff;
+            border-left: 4px solid #4dabf7;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            text-align: left;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .icon {
+            font-size: 64px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="instructions">
+        <h1>Rust+ Authentication</h1>
+        
+        <div class="note">
+            <strong>Important:</strong> This process will link your Steam account with the Rust+ companion app. 
+            You must allow popup windows for this to work. If you see a popup blocker notification, please allow popups and refresh this page.
+        </div>
+        
+        <div class="step">
+            <h3>Step 1: Understand the Process</h3>
+            <p>This tool helps you connect to the Rust+ companion app API. It requires authentication through your Steam account to generate a token that will be used for all future Rust+ API requests.</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Login with Steam</h3>
+            <p>When you click the button below, a new window will open asking you to login with your Steam account. This is the official Rust+ authentication page.</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Authorization</h3>
+            <p>After logging in with Steam, you'll be asked to authorize the Rust+ app. This is required to generate your authentication token.</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 4: Completion</h3>
+            <p>Once authorized, the popup window will close automatically and you'll see a success message. The CLI tool will receive your authentication token and continue the setup process.</p>
+        </div>
+        
+        <button id="startButton">Start Steam Authentication</button>
+    </div>
+    
+    <div class="container success hidden" id="successMessage">
+        <div class="icon">✓</div>
+        <h2>Authentication Successful!</h2>
+        <p>Your Steam account has been successfully linked with Rust+.</p>
+        <p>The authentication token has been received and saved.</p>
+        
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        
+        <p>This window will close automatically in <span id="countdown">5</span> seconds...</p>
+        
+        <div class="info">
+            <p><strong>What happens next?</strong></p>
+            <p>The CLI tool will now complete the registration process with the Rust+ API. You'll be able to use all Rust+ features through the command line interface.</p>
+        </div>
+        
+        <button class="button" onclick="window.close()">Close Window Now</button>
+    </div>
+
+    <script type="text/javascript">
+        document.getElementById('startButton').addEventListener('click', function() {
+            // Launch Rust+ login website in a popup window
+            var popupWindow = window.open("https://companion-rust.facepunch.com/login", "", "width=800,height=600");
+            
+            // Each time the popup window changes origins (rust+ -> steam -> rust+), our changes to the window object are reset.
+            // So, every 250ms check if our handler is not registered, and register it if needed.
+            var handlerInterval = setInterval(function() {
+                if(popupWindow && !popupWindow.closed && popupWindow.ReactNativeWebView === undefined) {
+                    console.log("Registering ReactNativeWebView.postMessage handler");
+                    popupWindow.ReactNativeWebView = {
+                        /**
+                         * Rust+ login website calls ReactNativeWebView.postMessage after successfully logging in with Steam.
+                         * @param message json string with SteamId and Token
+                         */
+                        postMessage: function(message) {
+                            // We no longer need the handler
+                            clearInterval(handlerInterval);
+                            
+                            // Parse json message
+                            var auth = JSON.parse(message);
+                            
+                            // Send the token to the server using Axios instead of redirecting
+                            axios.post('/callback', {
+                                token: auth.Token
+                            })
+                            .then(function (response) {
+                                console.log("Token sent successfully");
+                                
+                                // Show success message by changing the page content
+                                document.getElementById('instructions').classList.add('hidden');
+                                document.getElementById('successMessage').classList.remove('hidden');
+                                
+                                // Start countdown
+                                var seconds = 5;
+                                var countdownElement = document.getElementById('countdown');
+                                
+                                var countdownInterval = setInterval(function() {
+                                    seconds--;
+                                    countdownElement.textContent = seconds;
+                                    
+                                    if(seconds <= 0) {
+                                        clearInterval(countdownInterval);
+                                        window.close();
+                                    }
+                                }, 1000);
+                            })
+                            .catch(function (error) {
+                                console.error("Error sending token:", error);
+                                alert("Error sending authentication token. Please try again.");
+                            });
+                            
+                            // Close the popup window
+                            popupWindow.close();
+                        }
+                    };
+                } else if(popupWindow && popupWindow.closed) {
+                    // If the user closed the popup without completing auth
+                    clearInterval(handlerInterval);
+                    console.log("Authentication window was closed by user");
+                }
+            }, 250);
+        });
+    </script>
+</body>
+</html>
