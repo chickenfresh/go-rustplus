@@ -18,8 +18,8 @@ import (
 )
 
 const (
-	FCMSubscribe = "https://fcm.googleapis.com/fcm/connect/subscribe"
-	FCMEndpoint  = "https://fcm.googleapis.com/fcm/send"
+	Subscribe = "https://fcm.googleapis.com/fcm/connect/subscribe"
+	Endpoint  = "https://fcm.googleapis.com/fcm/send"
 )
 
 type GCMCredentials struct {
@@ -186,12 +186,12 @@ func RegisterFCM(senderID, token string) (Keys, FCMResponse, error) {
 	// Prepare form data
 	form := url.Values{}
 	form.Add("authorized_entity", senderID)
-	form.Add("endpoint", fmt.Sprintf("%s/%s", FCMEndpoint, token))
+	form.Add("endpoint", fmt.Sprintf("%s/%s", Endpoint, token))
 	form.Add("encryption_key", formatURLBase64(keys.Public))
 	form.Add("encryption_auth", formatURLBase64(keys.Auth))
 
 	// Create request
-	req, err := http.NewRequest("POST", FCMSubscribe, strings.NewReader(form.Encode()))
+	req, err := http.NewRequest("POST", Subscribe, strings.NewReader(form.Encode()))
 	if err != nil {
 		return Keys{}, FCMResponse{}, fmt.Errorf("failed to create request: %w", err)
 	}
